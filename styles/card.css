@@ -1,0 +1,52 @@
+.card-task{
+    width: 100%;
+    height: auto;
+    background-color: #ffffff;
+    flex-direction: column;
+}
+
+.card-task:hover{
+    cursor: move;
+    box-shadow: 0 0 0.5rem .2rem;
+    animation: shadow-animation .20s ease-in-out forwards;
+}
+
+.card-title{
+    height: auto;
+    max-height: 50px;
+    width: 100%;
+    padding-left: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis; 
+}
+
+.card-details-container{
+    width: 100%;
+    height: auto;
+    padding: .5rem;
+}
+
+.card-details-container{
+    width: 100%;
+    height: auto;
+}
+
+.user-image{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-image: url(../images/perfil.jpeg);
+    background-size: cover;
+    background-position: center;
+}
+
+.complexity-indicator{
+    gap: .1rem;
+}
+
+.complexity-indicator > span{
+    width: 6px;
+    height: 6px;
+    background-color: rgb(206, 43, 43);
+    border-radius: 50%;
+}

@@ -1,0 +1,85 @@
+/* CSS for the modal which displays all the task information */
+
+.left-panel{
+    width: 100%;
+    height: auto;
+    overflow: auto;
+    padding: 1rem 0 1rem 0;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.right-panel{
+    width: 250px;
+    height: 200px;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.edit-task-container{
+    width: 100%;
+    height: auto;
+    padding: .5rem;
+    border-radius: .25rem;
+}
+
+.edit-task-input{
+    padding: .2rem;
+    width: 100%;
+    height: fit-content;
+    border: solid 1px transparent;
+    cursor: pointer;
+}
+
+.edit-task-input:focus{
+    border: solid 1px black;
+}
+
+.edit-task-container:hover{
+    background-color: #c5d0e2;
+}
+
+.add-comment-container{
+    height: auto;
+    width: 100%;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.add-comment-controller{
+    height: auto;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 1rem 0 0;
+}
+
+.modal-comments-container{
+    height: auto;
+    width: 100%;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.comment-container{
+    width: 100%;
+    height: auto;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+/* ------------------------------ */
+
+/* CSS for special properties - must be present on every CSS file */
+.hide{
+    display: none;
+}
+
+.invisible{
+    visibility: 0;
+}
+
+/* ------------------------------ */

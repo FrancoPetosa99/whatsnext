@@ -1,0 +1,20 @@
+[
+    {
+        "name": "Franco",
+        "lastName": "Petosa",
+        "password": "p",
+        "email": "franco.petosa15@gmail.com",
+        "assigned": "Franco",
+        "tasks": [1,2],
+        "id": 1
+    },
+    {
+        "name": "Ezequiel",
+        "lastName": "Ibarra",
+        "password": "p",
+        "email": "ezequiel.ibarra@gmail.com",
+        "assigned": "Franco",
+        "tasks": [1,2],
+        "id": 2
+    }
+]

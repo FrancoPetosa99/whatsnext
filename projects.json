@@ -1,0 +1,34 @@
+[
+    {
+        "title":"Mejorar CV",
+        "description":"Aplicar en el cv todo lo aprendido",
+        "date":"10/09/2022",
+        "state":"completed",
+        "assigned": "Franco",
+        "id":1
+    },
+    {
+        "title":"Aprender JS",
+        "description":"Seguir practicando",
+        "date":"02/04/2022",
+        "state":"completed",
+        "assigned": "Ezequiel",
+        "id":2
+    },
+    {
+        "title":"Entrenar",
+        "description":"Correr 20 KM",
+        "date":"20/02/2022",
+        "state":"incompleted",
+        "assigned": "Franco",
+        "id":3
+    },
+    {
+        "title":"Comprar medias",
+        "description":"Ir al local y comprar",
+        "date":"11/02/2022",
+        "state":"incompleted",
+        "assigned": "Franco",
+        "id":4
+    }
+]

@@ -1,0 +1,198 @@
+/* Reusable CCS properties */
+
+.flex{
+    display: flex;
+}
+.flex-center{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-evenly{
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 1rem;
+}
+
+.flex-between{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex-around{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.flex-column{
+    display: flex;
+    justify-content: stretch;
+    align-items: center;
+    flex-direction: column;
+}
+
+.grid{
+    display: grid;
+    grid-template-rows: auto;
+    justify-items: center;
+    gap: 1rem;
+}
+
+.grid-1-2{
+    display: grid;
+    grid-template-columns: 1fr auto;
+    justify-items: center;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.scroll::-webkit-scrollbar {
+    width: 0.25rem;     /* Tamaño del scroll en vertical */
+    /* display: none;  /* Ocultar scroll */
+}
+
+
+.scroll::-webkit-scrollbar-thumb {
+    background: #ff5630;
+    border-radius: 4px;
+}
+
+.scroll::-webkit-scrollbar-track {
+    background: #c9c7c7;
+    border-radius: 4px;
+}
+
+/* ------------------------------ */
+
+/* CSS for semantic HTML elements */
+body{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+header{
+    width: 100%;
+    height: auto;
+   
+}
+
+nav{
+   
+}
+
+/* ------------------------------ */
+
+#app{
+    width: 100%;
+    height: auto;
+    min-height: 100vh;
+}
+
+/* CSS for specific navbar elements */
+
+.whatsnext-logo{
+    width: 35px;
+    height: auto;
+}
+
+.search-form{
+    width: 100%;
+    max-width: 300px;
+    
+}
+
+/* ------------------------------ */
+
+/* CSS for column elements */
+
+#columns-container{
+    width: 100%;
+    max-width: 1500px;
+    height: 80vh;
+    overflow-y: scroll;
+    margin-top: 1rem;
+    padding-right: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    justify-self: center;
+}
+
+.column{
+    width: 100%;
+    height: auto;
+    padding: 1rem;
+    background-color: #f4f5f7;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.column-header{
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 1rem;
+}
+
+.column-title{
+    color: #5e6c84;
+    font-weight: bold;
+}
+
+.column-tasks-number{
+    position: absolute;
+    right: 1rem;
+    height: 35px;
+    width: 35px;
+    color: white;
+    background-color: #5e6c84;
+    border-radius: 50%;
+    font-weight: bold;
+}
+
+.card-tasks-container{
+    position: relative;
+    width: 100%;
+    height: 100%;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.task-dropper{
+    position: absolute;
+    z-index: -1;
+}
+
+.drag-start{
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    border: dotted dodgerblue .20rem;
+    background-color: rgb(203, 216, 246); 
+}
+
+.drag-over{
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    border: dotted rgb(30, 255, 109) .20rem;
+    background-color: rgb(203, 246, 204); 
+}
+
+/* ------------------------------ */
+
+/* CSS for special properties */
+.hide{
+    display: none;
+}
+
+.invisible{
+    visibility: 0;
+}
+
+/* ------------------------------ */

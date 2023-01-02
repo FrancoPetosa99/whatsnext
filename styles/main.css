@@ -186,6 +186,15 @@ nav{
 
 /* ------------------------------ */
 
+/* CSS for icons */
+.btn-icon{
+    cursor: pointer;
+}
+
+/* ------------------------------ */
+
+/* ------------------------------ */
+
 /* CSS for special properties */
 .hide{
     display: none;

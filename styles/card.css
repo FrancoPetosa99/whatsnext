@@ -31,13 +31,16 @@
     height: auto;
 }
 
-.user-image{
-    width: 35px;
-    height: 35px;
+.user-icon{
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    background-image: url(../images/perfil.jpeg);
-    background-size: cover;
-    background-position: center;
+    background-color: cornflowerblue;
+    text-transform: uppercase;
+    letter-spacing: .1rem;
+    font-weight: bold;
+    font-size: .8rem;
+    color: #ffffff;
 }
 
 .complexity-indicator{

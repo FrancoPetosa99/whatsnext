@@ -1,4 +1,4 @@
-function Dragdrop(callbackDrop){
+function Dragdrop(dropCallback){
 
     //global variables from module
     
@@ -33,19 +33,25 @@ function Dragdrop(callbackDrop){
     function drop(){
         this.classList.remove('drag-over');
         if(this != dragoverZone) this.parentNode.appendChild(draggedItem);
-        if(callbackDrop) callbackDrop();
+        if(dropCallback) dropCallback();
     }
 
     function dragleave(){
         this.classList.remove('drag-over');
     }
 
+    function dragEnter(e){
+        e.preventDefault();
+        this.classList.add('drag-over');
+    }
+
+    function dragOver(e){
+        e.preventDefault();
+    }
+
     dropZones.forEach(zone => {
-        zone.addEventListener('dragover', (e)=> e.preventDefault());
-        zone.addEventListener('dragenter', (e)=> {
-            e.preventDefault();
-            zone.classList.add('drag-over');
-        })
+        zone.addEventListener('dragover', dragOver);
+        zone.addEventListener('dragenter', dragEnter)
         zone.addEventListener('dragleave', dragleave);
         zone.addEventListener('drop', drop);
     })

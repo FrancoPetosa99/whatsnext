@@ -8,6 +8,8 @@
         <link rel="shortcut icon" href="favIcon.svg">
         <!-- estilos bootstrap -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css">
+        <!-- icons bootstrap -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
         <!-- quilljs CSS -->
         <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
         <!-- main CSS -->
@@ -38,7 +40,7 @@
                         <div class="offcanvas-body">
                             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                                 <li class="nav-item"><p style="cursor: pointer;" class="nav-link">Team</p></li>
-                                <li class="nav-item"><p style="cursor: pointer;" class="nav-link">New task</p></li>
+                                <li class="nav-item" id="btnNewTask"><p style="cursor: pointer;" class="nav-link">New task</p></li>
                                 <li class="nav-item"><p style="cursor: pointer;" class="nav-link">Log out</p></li>
                             </ul>
                         </div>
@@ -56,40 +58,22 @@
                     <div id="card-tasks-container-next" class="card-tasks-container flex-center">
                         <!-- cards must be added dinamically-->
                         <div drop-zone="true" aria-label="dgdp-drop-zone" class="task-dropper"></div>
-                        <div card-id="1" class="card-task flex-center" draggable="true">
-                            <h6 class="card-title">Create a Training Course on Test Case Writing</h6>
+                        <div class="card-task flex-center">
+                            <h6 class="card-title">${task.title}</h6>
                             <div class="card-details-container flex-around">
                                 <div class="flex-center" style="gap: .8rem;">
-                                    <img src="./assets/task-icons/bug.svg" alt="icon" width="18" height="18" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="bug">
-                                    <img src="./assets/priority-icons/high.svg" alt="icon" width="18" height="18" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="high">
+                                    <img src="./assets/task-icons/${task.type}.svg" alt="icon" width="18" height="18" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="${task.type}">
+                                    <img src="./assets/priority-icons/${task.priority}.svg" alt="icon" width="18" height="18" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="${task.priority}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="cornflowerblue" class="bi bi-alarm-fill" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="4 days left">
                                         <path d="M6 .5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1H9v1.07a7.001 7.001 0 0 1 3.274 12.474l.601.602a.5.5 0 0 1-.707.708l-.746-.746A6.97 6.97 0 0 1 8 16a6.97 6.97 0 0 1-3.422-.892l-.746.746a.5.5 0 0 1-.707-.708l.602-.602A7.001 7.001 0 0 1 7 2.07V1h-.5A.5.5 0 0 1 6 .5zm2.5 5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5zM.86 5.387A2.5 2.5 0 1 1 4.387 1.86 8.035 8.035 0 0 0 .86 5.387zM11.613 1.86a2.5 2.5 0 1 1 3.527 3.527 8.035 8.035 0 0 0-3.527-3.527z"/>
                                     </svg>
-                                    <div class="complexity-indicator flex-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="high">
+                                    <div class="complexity-indicator flex-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="${task.complexity}">
                                         <span></span>
                                         <span></span>
                                         <span></span>
                                     </div>
                                 </div>
-                                <span class="user-image flex-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Assigned to: Franco"></span>
-                            </div>
-                        </div>
-                        <div card-id="1" class="card-task flex-center" draggable="true">
-                            <h6 class="card-title">Create a Training Course on Test Case Writing</h6>
-                            <div class="card-details-container flex-around">
-                                <div class="flex-center" style="gap: .8rem;">
-                                    <img src="./assets/task-icons/bug.svg" alt="icon" width="18" height="18" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="bug">
-                                    <img src="./assets/priority-icons/high.svg" alt="icon" width="18" height="18" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="high">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="cornflowerblue" class="bi bi-alarm-fill" viewBox="0 0 16 16" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="4 days left">
-                                        <path d="M6 .5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1H9v1.07a7.001 7.001 0 0 1 3.274 12.474l.601.602a.5.5 0 0 1-.707.708l-.746-.746A6.97 6.97 0 0 1 8 16a6.97 6.97 0 0 1-3.422-.892l-.746.746a.5.5 0 0 1-.707-.708l.602-.602A7.001 7.001 0 0 1 7 2.07V1h-.5A.5.5 0 0 1 6 .5zm2.5 5a.5.5 0 0 0-1 0v3.362l-1.429 2.38a.5.5 0 1 0 .858.515l1.5-2.5A.5.5 0 0 0 8.5 9V5.5zM.86 5.387A2.5 2.5 0 1 1 4.387 1.86 8.035 8.035 0 0 0 .86 5.387zM11.613 1.86a2.5 2.5 0 1 1 3.527 3.527 8.035 8.035 0 0 0-3.527-3.527z"/>
-                                    </svg>
-                                    <div class="complexity-indicator flex-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="high">
-                                        <span></span>
-                                        <span></span>
-                                        <span></span>
-                                    </div>
-                                </div>
-                                <span class="user-image flex-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Assigned to: Franco"></span>
+                                <span class="user-icon flex-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Assigned to: ${task.assigned}">fp</span>
                             </div>
                         </div>
                     </div>
@@ -127,7 +111,7 @@
             </div>
         </div>
         <!-- Modal task -->
-        <div class="modal fade" id="data-task-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+        <!-- <div class="modal fade" id="data-task-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
             <div style="max-width: 1000px; width: 95%; height: 500px;" class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -146,25 +130,28 @@
                                 </div>
                             </div>
                             <div class="modal-comments-container flex-center">
-                                <!-- comments must be added dinamically -->
+                                
                             </div>
                         </div>
                         <div class="right-panel flex-center">
-                            <select data-save-changes name="state" class="edit-task-input">
-                                <option value="next">next week</option>
-                                <option value="progress">progress</option>
-                                <option value="blocked">blocked</option>
-                                <option value="done">done</option>
-                            </select>
                             <div class="edit-task-container flex-evenly">
-                                <span class="user-image flex-center"></span>
-                                <select data-save-changes name="assigned" data-user-ddm class="edit-task-input">
-                                    <!-- options make reference to users and must be added dinamically -->
+                                <select data-save-changes name="state" class="edit-task-input">
+                                    <option value="null">select item</option>
+                                    <option value="next">next week</option>
+                                    <option value="progress">progress</option>
+                                    <option value="blocked">blocked</option>
+                                    <option value="done">done</option>
                                 </select>
                             </div>
                             <div class="edit-task-container flex-evenly">
-                                <img data-task-complexity-icon alt="icon" width="18" height="18">
+                                <select data-save-changes name="assigned" data-user-ddm class="edit-task-input">
+                                    <option value="null">select item</option>
+                                    
+                                </select>
+                            </div>
+                            <div class="edit-task-container flex-evenly">
                                 <select data-save-changes name="priority" class="edit-task-input">
+                                    <option value="null">select item</option>
                                     <option value="low">low</option>
                                     <option value="medium">medium</option>
                                     <option value="high">high</option>
@@ -174,6 +161,70 @@
                     </div>
                     <div class="modal-footer">
                         <button id="save-task-changes-btn" type="button" class="btn btn-primary" data-bs-dismiss="modal">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <!-- Modal new task -->
+        <div class="modal fade" id="new-task-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+            <div style="max-width: 1000px; width: 95%; height: 500px;" class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <input data-save-new name="title" value="Title" class="edit-task-input fs-5"/>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body grid-1-2">
+                        <div class="left-panel flex">
+                            <h3 class="fs-5">Description</h3>
+                            <textarea data-save-new name="description"></textarea>
+                            <div class="add-comment-container flex-center">
+                                <input id="add-comment-input" class="form-control" placeholder="Add a comment..."/>
+                                <div id="add-comment-controller" class="add-comment-controller invisible">
+                                    <button id="cancel-comment-btn" type="button" class="btn btn-secondary btn-sm">Cancel</button>
+                                    <button id="add-comment-btn" type="button" class="btn btn-primary btn-sm">Save</button>
+                                </div>
+                            </div>
+                            <div class="modal-comments-container flex-center">
+                                <!-- comments must be added dinamically -->
+                            </div>
+                        </div>
+                        <div class="right-panel flex-center">
+                            <div class="edit-task-container flex-evenly">
+                                <select data-save-new name="state" class="edit-task-input">
+                                    <option value="null">select state</option>
+                                    <option value="next">next week</option>
+                                    <option value="progress">progress</option>
+                                    <option value="blocked">blocked</option>
+                                    <option value="done">done</option>
+                                </select>
+                            </div>
+                            <div class="edit-task-container flex-evenly">
+                                <select data-save-new name="assigned" data-user-ddm class="edit-task-input">
+                                    <option value="null">unassigned</option>
+                                    <!-- options make reference to users and must be added dinamically -->
+                                </select>
+                            </div>
+                            <div class="edit-task-container flex-evenly">
+                                <select data-save-new name="priority" class="edit-task-input">
+                                    <option value="null">select priority</option>
+                                    <option value="low">low</option>
+                                    <option value="medium">medium</option>
+                                    <option value="high">high</option>
+                                </select>
+                            </div>
+                            <div class="edit-task-container flex-evenly">
+                                <select data-save-new name="type" class="edit-task-input">
+                                    <option value="null">select type</option>
+                                    <option value="task">Task</option>
+                                    <option value="bug">Bug</option>
+                                    <option value="story">Story</option>
+                                </select>
+                            </div>
+                            <button id="delete-task-btn" style="width: 100%;" type="button" class="btn btn-outline-danger">Delete</button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="createTaskBtn" type="button" class="btn btn-primary">Save</button>
                     </div>
                 </div>
             </div>

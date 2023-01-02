@@ -1,23 +1,33 @@
 // IMPORT SECTION
 import Dragdrop from './scripts/dragdrop.js';
 import ProjectMannager from './scripts/pm.js';
+import Storage from './scripts/Storage.js';
 
 // GLOBAL VARIABLES SECTION
     
     // MODULES & CLASS INSTANCE
-    const dgdp = new Dragdrop();
+    const storage = new Storage();
+    const dgdp = new Dragdrop(updateTaskState);
     const pm = new ProjectMannager();
-    const dataTaskModal = new bootstrap.Modal('#data-task-modal');
+    //const dataTaskModal = new bootstrap.Modal('#data-task-modal');
+    const newTaskModal = new bootstrap.Modal('#new-task-modal');
     //const quillEditor = new Quill('#edit-description-task-input', {theme: 'snow'});
 
     //DOM ELEMENTS
     const columnList = document.querySelectorAll('.column');
+    const btnNewTask = document.getElementById('btnNewTask');
+    const btnCreateNewTask = document.getElementById('createTaskBtn');
 
     //MODAL TASK DATA
     const saveChangesBtn = document.getElementById('save-task-changes-btn');
     const addCommentInput = document.getElementById('add-comment-input');
-    const controller = document.getElementById('add-comment-controller');
-
+    const comentsController = document.getElementById('add-comment-controller');
+    const btnAddComment = document.getElementById('add-comment-btn');
+    const commentsContainer = document.querySelector('.modal-comments-container');
+    const btnDeleteTask = document.getElementById('delete-task-btn');
+    console.log(btnDeleteTask);
+    //const btnCancelComment = document.getElementById('cancel-comment-btn');
+    
 // GLOBAL FUNCTIONS DECLARATIONS
 
 function addOptionsToddm(ddmIdentifier, userList){
@@ -29,50 +39,47 @@ function addOptionsToddm(ddmIdentifier, userList){
     })
 }
 
-function displayTaskModal(taskID){
+function openTaskModal(taskID){
+
+    const modalInputs = [...document.querySelectorAll('[data-save-new]')];
+
+    const commentsContainer = document.querySelector('.modal-comments-container');
 
     pm.currentTaskID = taskID;
 
     const taskData= pm.getTaskByID(taskID);
 
-    const modalInputs = [...document.querySelectorAll('[data-save-changes]')];
-
-    modalInputs.forEach(input => {
-        console.log(taskData[input.name])
-        input.value = taskData[input.name];
-    })
-    
-    //handle task priority icon
-    const priorityIcon = document.querySelector('[data-task-complexity-icon]');
-    priorityIcon.src = `./assets/priority-icons/${taskData.priority}.svg`;
+    modalInputs.forEach(input => input.value = taskData[input.name])
 
     //handle task comments
     if(taskData.comments.length > 0){
 
-        const commentsContainer = document.querySelector('.modal-comments-container');
         let comments = '';
         taskData.comments.forEach(comment => {
             comments += `
-                <div class="comment-container flex-evenly">
-                    <span class="user-image flex-center"></span>
-                    <input name="title" value="${comment.label}" class="edit-task-input fs-6" id="edit-title-task-input"/>
-                </div>`;
+                    <div class="comment-container flex-evenly">
+                        <input name="comment" value="${comment}" class="comment" disabled/>
+                        <i class="bi bi-trash3 btn-icon"></i>
+                    </div>`;
         })
         commentsContainer.innerHTML = comments;
     }
 
-    dataTaskModal.show();
+    newTaskModal.show();
+}
+
+function openNewTaskModal(){
+
+    newTaskModal.show();
 }
 
 function fetchAppData(){
-    return Promise.all([
-        fetch('./tasks.json')
-            .then(res => res.json()),
-        fetch('./users.json')
-            .then(res => res.json())
-    ])
+
+    const taskData = [];
+    taskData[0] = storage.getTasksData();
+    taskData[1] = storage.getUsersData();
     
-    
+    return taskData
 }
 
 function saveTaskChanges(){
@@ -86,6 +93,91 @@ function saveTaskChanges(){
     console.log(newTaskData);
 
     // pm.editTask(newTaskData);
+}
+
+function updateTaskState(){
+    console.log("funciona");
+}
+
+function handleValidation(){
+    return true
+}
+
+function createNewTask(){
+
+    try{
+
+        const modalInputs = [...document.querySelectorAll('[data-save-new]')];
+        const commentInputs = [...document.querySelectorAll('[name = comment]')];
+
+        const newTaskObj = {};
+        newTaskObj.comments = [];
+        
+        modalInputs.forEach(input => newTaskObj[input.name] = input.value);
+        commentInputs.forEach(input => newTaskObj.comments.push(input.value));
+        
+        const isValid = handleValidation(newTaskObj);
+        if(!isValid) throw new Error('Fields are missing');
+
+        console.log(newTaskObj);
+
+        const card = pm.createTask(newTaskObj);
+
+        dgdp.addDGDPListener(card);
+
+        storage.addTask(newTaskObj);
+
+        resetModal();
+        
+        newTaskModal.hide();
+
+    }catch(error){
+        console.log(error);
+    }
+
+}
+
+function addComment(){
+    if(addCommentInput.value){
+        const commentHtml = `
+                    <div class="comment-container flex-evenly">
+                        <input name="comment" value="${addCommentInput.value}" class="comment" disabled/>
+                        <i class="bi bi-trash3 btn-icon"></i>
+                    </div>
+                `
+        commentsContainer.innerHTML += commentHtml;
+        addCommentInput.value = '';
+        comentsController.classList.toggle('invisible');
+    }else{
+        console.log("funciona")
+    }
+}
+
+function resetModal(){
+
+    //reset inputs in modal
+    const modalInputs = [...document.querySelectorAll('[data-save-new]')];
+    modalInputs.forEach(input => {
+        if(input.tagName == 'SELECT') input.value = null
+        else input.value = input.name
+    })
+
+    const commentInputs = [...document.querySelectorAll('[name = comment]')];
+    commentInputs.forEach(input => input.parentNode.remove());
+
+    addCommentInput.value = '';
+
+}
+
+function deleteTask(){
+
+    try{
+        const currentTaskID = pm.currentTaskID;
+        //storage.deleteTask(currentTaskID);
+        pm.deleteTask();
+    }catch(error){
+        console.log(error);
+    }
 }
 
 // MAIN CODE
@@ -106,7 +198,7 @@ async function startApp(){
         dgdp.addDGDPListenerDOM();
 
         //fill ddm with users
-        addOptionsToddm('[data-user-ddm]', userList);
+        if(userList) addOptionsToddm('[data-user-ddm]', userList);
 
     }catch(error){
         console.log(error);
@@ -116,7 +208,7 @@ async function startApp(){
 
 
 // LISTENERS AND CONTROLLERS
-window.addEventListener('load', startApp); // once the dom is fully downloaded execute the app logic
+window.addEventListener('load', startApp); // once the dom is fully downloaded run the app logic
 
 //add click event to task cards
 columnList.forEach(column => {
@@ -134,13 +226,15 @@ columnList.forEach(column => {
 
             const taskID = clickedElement.getAttributeNode('card-id').value;
 
-            displayTaskModal(taskID);
-        
+            openTaskModal(taskID);
         }
-        
     })
 })
 
-saveChangesBtn.addEventListener('click', saveTaskChanges);
-addCommentInput.addEventListener('focus', ()=> controller.classList.toggle('hide'));
-addCommentInput.addEventListener('blur', ()=> controller.classList.toggle('hide'));
+//saveChangesBtn.addEventListener('click', saveTaskChanges);
+addCommentInput.addEventListener('focus', ()=> comentsController.classList.remove('invisible'));
+//addCommentInput.addEventListener('blur', ()=> setTimeout(()=> comentsController.classList.toggle('invisible'), 0));
+btnNewTask.addEventListener('click', openNewTaskModal);
+btnCreateNewTask.addEventListener('click', createNewTask);
+btnAddComment.addEventListener('click', addComment);
+btnDeleteTask.addEventListener('click', deleteTask);

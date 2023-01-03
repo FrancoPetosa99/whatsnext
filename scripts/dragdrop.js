@@ -60,25 +60,14 @@ function Dragdrop(dropCallback){
     function addDGDPListener(newElement){
 
         //verify the new element has attribute draggable set in true
-        if(!newElement.draggable) throw new Error('The passed in node does not have attribute draggable set in trur');
+        if(!newElement.draggable) throw new Error('The passed in node does not have attribute draggable set in true');
 
         newElement.addEventListener('dragstart', dragStart);
         newElement.addEventListener('dragend', dragEnd)
     }
 
-    function addDGDPListenerDOM(){
-
-        const taskList = [...document.querySelectorAll('[draggable = true]')];
-
-        taskList.forEach(task => {
-            task.addEventListener('dragstart', dragStart);
-            task.addEventListener('dragend', dragEnd);
-        })
-    }
-    
     return {
-        addDGDPListener,
-        addDGDPListenerDOM
+        addDGDPListener
     }
 }
 

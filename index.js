@@ -2,6 +2,7 @@
 import Dragdrop from './scripts/dragdrop.js';
 import ProjectMannager from './scripts/pm.js';
 import Storage from './scripts/Storage.js';
+import Task from './scripts/Task.js';
 
 // GLOBAL VARIABLES SECTION
     
@@ -42,10 +43,9 @@ function addOptionsToddm(ddmIdentifier, userList){
 function openTaskModal(taskID){
 
     const modalInputs = [...document.querySelectorAll('[data-save-new]')];
-
     const commentsContainer = document.querySelector('.modal-comments-container');
 
-    pm.currentTaskID = taskID;
+    pm.currentTask = taskID;
 
     const taskData= pm.getTaskByID(taskID);
 
@@ -119,11 +119,13 @@ function createNewTask(){
         const isValid = handleValidation(newTaskObj);
         if(!isValid) throw new Error('Fields are missing');
 
-        console.log(newTaskObj);
+        newTaskObj.id = pm.getAvailableID();
 
-        const card = pm.createTask(newTaskObj);
+        const newTask = new Task(newTaskObj);
 
-        dgdp.addDGDPListener(card);
+        pm.taskList.push(newTask);
+
+        dgdp.addDGDPListener(newTask.card);
 
         storage.addTask(newTaskObj);
 
@@ -172,9 +174,10 @@ function resetModal(){
 function deleteTask(){
 
     try{
-        const currentTaskID = pm.currentTaskID;
-        //storage.deleteTask(currentTaskID);
+        const currentTaskID = pm.getTaskByID().id
+        storage.deleteTask(currentTaskID);
         pm.deleteTask();
+        newTaskModal.hide();
     }catch(error){
         console.log(error);
     }
@@ -192,13 +195,15 @@ async function startApp(){
 
         //create task-cards in the dom
         taskList.forEach(task => {
-            pm.createTask(task);
-        });
-
-        dgdp.addDGDPListenerDOM();
+            const taskObj = new Task(task);
+            dgdp.addDGDPListener(taskObj.card);
+            pm.taskList.push(taskObj);
+        })
 
         //fill ddm with users
         if(userList) addOptionsToddm('[data-user-ddm]', userList);
+
+        console.log(pm.taskList);
 
     }catch(error){
         console.log(error);
@@ -231,10 +236,10 @@ columnList.forEach(column => {
     })
 })
 
-//saveChangesBtn.addEventListener('click', saveTaskChanges);
 addCommentInput.addEventListener('focus', ()=> comentsController.classList.remove('invisible'));
-//addCommentInput.addEventListener('blur', ()=> setTimeout(()=> comentsController.classList.toggle('invisible'), 0));
 btnNewTask.addEventListener('click', openNewTaskModal);
 btnCreateNewTask.addEventListener('click', createNewTask);
 btnAddComment.addEventListener('click', addComment);
 btnDeleteTask.addEventListener('click', deleteTask);
+
+console.log(pm.getAvailableID());

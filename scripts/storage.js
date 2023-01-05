@@ -18,8 +18,8 @@ function Storage(){
         localStorage.setItem("tasks", JSON.stringify(taskList));
     }
 
-    function updateData(){
-
+    function updateTaskData(data){
+        localStorage.setItem("tasks", JSON.stringify(data));
     }
 
     function deleteTask(id){
@@ -32,7 +32,7 @@ function Storage(){
         addTask,
         getTasksData,
         getUsersData,
-        updateData,
+        updateTaskData,
         deleteTask
     }
 }

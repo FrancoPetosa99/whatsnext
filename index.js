@@ -3,30 +3,31 @@ import Dragdrop from './scripts/dragdrop.js';
 import ProjectMannager from './scripts/pm.js';
 import Storage from './scripts/Storage.js';
 import Task from './scripts/Task.js';
+import UI from './scripts/ui.js';
 
 // GLOBAL VARIABLES SECTION
     
     // MODULES & CLASS INSTANCE
-    const storage = new Storage();
-    const dgdp = new Dragdrop(updateTaskState);
+    const ui = UI();
+    const storage = Storage();
+    const dgdp = Dragdrop();
     const pm = new ProjectMannager();
-    //const dataTaskModal = new bootstrap.Modal('#data-task-modal');
     const newTaskModal = new bootstrap.Modal('#new-task-modal');
     //const quillEditor = new Quill('#edit-description-task-input', {theme: 'snow'});
 
     //DOM ELEMENTS
+    const modalFooter = document.getElementById('modal-footer');
+    const addCommentInput = document.getElementById('add-comment-input');
     const columnList = document.querySelectorAll('.column');
     const btnNewTask = document.getElementById('btnNewTask');
-    const btnCreateNewTask = document.getElementById('createTaskBtn');
+    const btnSaveTask = document.getElementById('save-task-btn');
 
     //MODAL TASK DATA
-    const saveChangesBtn = document.getElementById('save-task-changes-btn');
-    const addCommentInput = document.getElementById('add-comment-input');
     const comentsController = document.getElementById('add-comment-controller');
     const btnAddComment = document.getElementById('add-comment-btn');
-    const commentsContainer = document.querySelector('.modal-comments-container');
     const btnDeleteTask = document.getElementById('delete-task-btn');
-    console.log(btnDeleteTask);
+    const modalInputs = [...document.querySelectorAll('[data-save-new]')];
+    console.log(modalInputs);
     //const btnCancelComment = document.getElementById('cancel-comment-btn');
     
 // GLOBAL FUNCTIONS DECLARATIONS
@@ -40,63 +41,43 @@ function addOptionsToddm(ddmIdentifier, userList){
     })
 }
 
-function openTaskModal(taskID){
+function handleModal(taskID = null){
 
-    const modalInputs = [...document.querySelectorAll('[data-save-new]')];
-    const commentsContainer = document.querySelector('.modal-comments-container');
+    ui.resetModal();
 
-    pm.currentTask = taskID;
+    ui.handleElementView(modalFooter, true); 
+    ui.handleElementView(btnDeleteTask, false); 
 
-    const taskData= pm.getTaskByID(taskID);
+    if(taskID){
+        
+        const modalInputs = [...document.querySelectorAll('[data-save-new]')];
+    
+        pm.currentTask = taskID;
+    
+        const taskData = pm.getTaskByID(taskID);
+    
+        modalInputs.forEach(input => input.value = taskData[input.name]);
 
-    modalInputs.forEach(input => input.value = taskData[input.name])
+        taskData.comments.forEach(comment => ui.appendComment(comment));
 
-    //handle task comments
-    if(taskData.comments.length > 0){
+        ui.handleElementView(modalFooter, false);
+        ui.handleElementView(btnDeleteTask, true); 
 
-        let comments = '';
-        taskData.comments.forEach(comment => {
-            comments += `
-                    <div class="comment-container flex-evenly">
-                        <input name="comment" value="${comment}" class="comment" disabled/>
-                        <i class="bi bi-trash3 btn-icon"></i>
-                    </div>`;
-        })
-        commentsContainer.innerHTML = comments;
     }
-
-    newTaskModal.show();
-}
-
-function openNewTaskModal(){
 
     newTaskModal.show();
 }
 
 function fetchAppData(){
 
-    const taskData = [];
-    taskData[0] = storage.getTasksData();
-    taskData[1] = storage.getUsersData();
-    
-    return taskData
-}
-
-function saveTaskChanges(){
-
-    const inputList = document.querySelectorAll('[data-save-changes]');
-
-    const newTaskData = {}; 
-
-    inputList.forEach(input => newTaskData[input.name] = input.value);
-
-    console.log(newTaskData);
-
-    // pm.editTask(newTaskData);
-}
-
-function updateTaskState(){
-    console.log("funciona");
+    return new Promise((resolve) => {
+        setTimeout(()=>{
+            const taskData = [];
+            taskData[0] = storage.getTasksData();
+            taskData[1] = storage.getUsersData();
+            resolve(taskData);
+        }, 1000);
+    });
 }
 
 function handleValidation(){
@@ -129,7 +110,8 @@ function createNewTask(){
 
         storage.addTask(newTaskObj);
 
-        resetModal();
+        ui.resetModal();
+        ui.handleColumnCardsNumber();
         
         newTaskModal.hide();
 
@@ -140,46 +122,52 @@ function createNewTask(){
 }
 
 function addComment(){
-    if(addCommentInput.value){
-        const commentHtml = `
-                    <div class="comment-container flex-evenly">
-                        <input name="comment" value="${addCommentInput.value}" class="comment" disabled/>
-                        <i class="bi bi-trash3 btn-icon"></i>
-                    </div>
-                `
-        commentsContainer.innerHTML += commentHtml;
-        addCommentInput.value = '';
-        comentsController.classList.toggle('invisible');
-    }else{
-        console.log("funciona")
+
+    try{
+        const comment = addCommentInput.value;
+        //if(pm.runValidationOn(comment)) throw new Error('coments can not be empty');
+        if(pm.currentTask) pm.addComment(comment);
+        storage.updateTaskData(pm.taskList);
+        ui.appendComment(comment);
+        ui.resetInput(addCommentInput);
+        ui.handleElementView(comentsController, false);
+
+    }catch(error){
+        console.log(error);
     }
-}
-
-function resetModal(){
-
-    //reset inputs in modal
-    const modalInputs = [...document.querySelectorAll('[data-save-new]')];
-    modalInputs.forEach(input => {
-        if(input.tagName == 'SELECT') input.value = null
-        else input.value = input.name
-    })
-
-    const commentInputs = [...document.querySelectorAll('[name = comment]')];
-    commentInputs.forEach(input => input.parentNode.remove());
-
-    addCommentInput.value = '';
-
 }
 
 function deleteTask(){
 
     try{
-        const currentTaskID = pm.getTaskByID().id
+
+        const currentTask = pm.getCurrentTask();
+        const currentTaskID = currentTask.id;
         storage.deleteTask(currentTaskID);
-        pm.deleteTask();
+        pm.deleteTask(currentTaskID);
+        ui.handleColumnCardsNumber();
         newTaskModal.hide();
+        
     }catch(error){
         console.log(error);
+    }
+}
+
+function updateTaskByInput(input){
+    const task = pm.getCurrentTask();
+    if(task){
+        pm.updateTaskByFieldName(input.name, input.value);
+        storage.updateTaskData(pm.taskList);
+        if(input.name == 'title'){
+            const element = task.card.querySelector('[card-data = title]');
+            ui.modifyElementContent(element, input.value);
+        }else {
+            const tooltipObj = task.tooltips.find(tooltip => tooltip.name == input.name);
+            tooltipObj.tooltip._config.title = input.value;
+            const icon = task.card.querySelector(`[card-data = ${input.name}]`);
+            console.log(icon);
+            ui.handleCardIcon(icon, input.value);
+        }
     }
 }
 
@@ -203,7 +191,10 @@ async function startApp(){
         //fill ddm with users
         if(userList) addOptionsToddm('[data-user-ddm]', userList);
 
+        ui.handleColumnCardsNumber();
+
         console.log(pm.taskList);
+        console.log(pm.getAvailableID());
 
     }catch(error){
         console.log(error);
@@ -215,7 +206,7 @@ async function startApp(){
 // LISTENERS AND CONTROLLERS
 window.addEventListener('load', startApp); // once the dom is fully downloaded run the app logic
 
-//add click event to task cards
+//add event to display modal an show the clicked card data
 columnList.forEach(column => {
     column.addEventListener('click', (e)=> {
 
@@ -231,15 +222,18 @@ columnList.forEach(column => {
 
             const taskID = clickedElement.getAttributeNode('card-id').value;
 
-            openTaskModal(taskID);
+            handleModal(taskID);
         }
     })
 })
 
-addCommentInput.addEventListener('focus', ()=> comentsController.classList.remove('invisible'));
-btnNewTask.addEventListener('click', openNewTaskModal);
-btnCreateNewTask.addEventListener('click', createNewTask);
+//add listener to update task data by blur event
+modalInputs.forEach(input => {
+    input.addEventListener('blur', (e)=> updateTaskByInput(e.target));
+})
+
+btnNewTask.addEventListener('click', ()=> handleModal());
+btnSaveTask.addEventListener('click', createNewTask);
 btnAddComment.addEventListener('click', addComment);
 btnDeleteTask.addEventListener('click', deleteTask);
-
-console.log(pm.getAvailableID());
+addCommentInput.addEventListener('focus', ()=> ui.handleElementView(comentsController, true));

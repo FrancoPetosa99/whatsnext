@@ -13,39 +13,13 @@ class ProjectMannager{
 
     // Task Methods
 
-    deleteTask = ()=> {
-        /* 
-            1. search task by id
-            2. remove from taskList array
-            3. remove from DOM
-        */
-        const taskToDelete = this.getTaskByID();
-        taskToDelete.card.parentNode.remove();
+    deleteTask = (id)=> {
+        const taskToDelete = this.getTaskByID(id);
+        taskToDelete.card.remove();
         this.taskList = this.taskList.filter(task => task.id != this.currentTask);
-        console.log(this.taskList);
     }
 
-    editTask = (props)=> {
-        /* 
-            1. search task by id
-            2. update the fields
-        */    
-    }
-
-    
-    getTaskByID = (id = null)=> {
-        /* 
-            1. search task by id
-            2. return the object
-        */
-
-        let searchedTask;
-
-        if(!id) searchedTask = this.taskList.find(task => task.id == this.currentTask);
-        else searchedTask = this.taskList.find(task => task.id == id);
-
-        return searchedTask;
-    }
+    getTaskByID = (id)=> this.taskList.find(task => task.id == id);
 
     getAvailableID = ()=> {
 
@@ -69,38 +43,17 @@ class ProjectMannager{
         return validIdNumber;
     }
 
-    // User Methods
-
-    createUser  = (user)=> {
-        /* 
-            1. assign a valid autoUserIdNumber
-            2. add to userList array
-            3. create html user card
-            4. insert into DOM
-        */
+    updateTaskByFieldName = (fieldName, newValue)=> {
+        const taskToUpdate = this.getCurrentTask();
+        taskToUpdate[fieldName] = newValue;
+        console.log(this.getCurrentTask());
     }
 
-    deleteUser = (id)=> {
-        /* 
-            1. search user by id
-            2. remove from userList array
-            3. remove from DOM
-        */
-    }
+    getCurrentTask = ()=> this.getTaskByID(this.currentTask);
 
-    editUser = (id, props)=> {
-        /* 
-            1. search user by id
-            2. update the fields
-        */
-    }
-
-
-    // App Methods
-    displayAlert = (message, type)=> {
-        // success
-        // error
-        // warning
+    addComment = (comment)=> {
+        const currentTask = this.getCurrentTask();
+        currentTask.comments.push(comment);
     }
 }
 

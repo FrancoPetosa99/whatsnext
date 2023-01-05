@@ -1,8 +1,8 @@
 // IMPORT SECTION
 import Dragdrop from './scripts/dragdrop.js';
 import ProjectMannager from './scripts/pm.js';
-import Storage from './scripts/Storage.js';
-import Task from './scripts/Task.js';
+import Storage from './scripts/storage.js';
+import Task from './scripts/task.js';
 import UI from './scripts/ui.js';
 
 // GLOBAL VARIABLES SECTION

@@ -97,13 +97,17 @@
             <div style="max-width: 1000px; width: 95%; height: 500px;" class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <input data-save-new name="title" value="Title" class="edit-task-input fs-5"/>
+                        <div class="title-input-container">
+                            <input data-save-new name="title" placeholder="Title..." class="edit-task-input fs-5" required/>
+                            <span class="error-field-icon flex-center invisible">!</span>
+                            <label class="error-field-label invisible" for="select-task-state">This field is required</label>
+                        </div>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body grid-1-2">
                         <div class="left-panel flex">
                             <h3 class="fs-5">Description</h3>
-                            <textarea data-save-new name="description"></textarea>
+                            <textarea class="description-input-task" placeholder="Description..." data-save-new name="description"></textarea>
                             <div class="add-comment-container flex-center">
                                 <input id="add-comment-input" class="form-control" placeholder="Add a comment..."/>
                                 <div id="add-comment-controller" class="add-comment-controller invisible">
@@ -116,36 +120,44 @@
                             </div>
                         </div>
                         <div class="right-panel flex-center">
-                            <div class="edit-task-container flex-evenly">
-                                <select data-save-new name="state" class="edit-task-input">
-                                    <option value="null">select state</option>
+                            <div  class="select-input-container">
+                                <select id="select-task-assigned" data-save-new name="assigned" data-user-ddm class="task-select form-select">
+                                    <option value="">unassigned</option>
+                                    <!-- options make reference to users and must be added dinamically -->
+                                </select>
+                                <span class="error-field-icon flex-center invisible">!</span>
+                                <label class="error-field-label invisible" for="select-task-assigned">This field is required</label>
+                            </div>
+                            <div  class="select-input-container">
+                                <select id="select-task-state" data-save-new name="state" class="task-select form-select" required>
+                                    <option value="">select state</option>
                                     <option value="next">next week</option>
                                     <option value="progress">progress</option>
                                     <option value="blocked">blocked</option>
                                     <option value="done">done</option>
                                 </select>
+                                <span class="error-field-icon flex-center invisible">!</span>
+                                <label class="error-field-label invisible" for="select-task-state">This field is required</label>
                             </div>
-                            <div class="edit-task-container flex-evenly">
-                                <select data-save-new name="assigned" data-user-ddm class="edit-task-input">
-                                    <option value="null">unassigned</option>
-                                    <!-- options make reference to users and must be added dinamically -->
-                                </select>
-                            </div>
-                            <div class="edit-task-container flex-evenly">
-                                <select data-save-new name="priority" class="edit-task-input">
-                                    <option value="null">select priority</option>
+                            <div id="select-task-priority" class="select-input-container">
+                                <select data-save-new name="priority" class="task-select form-select" required>
+                                    <option value="">select priority</option>
                                     <option value="low">low</option>
                                     <option value="medium">medium</option>
                                     <option value="high">high</option>
                                 </select>
+                                <span class="error-field-icon flex-center invisible">!</span>
+                                <label class="error-field-label invisible" for="select-task-priority">This field is required</label>
                             </div>
-                            <div class="edit-task-container flex-evenly">
-                                <select data-save-new name="type" class="edit-task-input">
-                                    <option value="null">select type</option>
+                            <div id="select-task-type" class="select-input-container">
+                                <select data-save-new name="type" class="task-select form-select" required>
+                                    <option value="">select type</option>
                                     <option value="task">Task</option>
                                     <option value="bug">Bug</option>
                                     <option value="story">Story</option>
                                 </select>
+                                <span class="error-field-icon flex-center invisible">!</span>
+                                <label class="error-field-label invisible" for="select-task-type">This field is required</label>
                             </div>
                             <button id="delete-task-btn" style="width: 100%;" type="button" class="btn btn-outline-danger">Delete</button>
                         </div>
@@ -164,6 +176,8 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
         <!-- script bootstrap.js -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+        <!-- script sweetalert.js -->
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         <!-- script index.js -->
         <script type="module" src="./index.js"></script>
     </body>

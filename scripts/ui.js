@@ -1,7 +1,7 @@
 function UI(){
 
     const commentsContainer = document.querySelector('.modal-comments-container');
-    
+
     function resetModal(){
         
         const addCommentInput = document.getElementById('add-comment-input');
@@ -9,15 +9,14 @@ function UI(){
         
         //reset inputs in modal
         modalInputs.forEach(input => {
-            if(input.tagName == 'SELECT') input.value = null
-            else input.value = input.name
-        })
+            input.value = '';
+            removeErrorOnField(input);
+        });
     
         const commentInputs = [...document.querySelectorAll('[name = comment]')];
         commentInputs.forEach(input => input.parentNode.remove());
     
         addCommentInput.value = '';
-    
     }
 
     function resetInput(input){
@@ -65,10 +64,54 @@ function UI(){
                 handleElementView(counter, true);
             }else handleElementView(counter, false);
         })
+    }
 
+    function setErrorOnField(input){
 
+        if(!input.classList.contains('error-field-input')){
+
+            input.classList.add('error-field-input');
+
+            const container = input.parentNode;
+            const errorIcon = container.querySelector('span');
+            const errorLabel = container.querySelector('label');
+
+            //avoids errors in case an element is undefined
+            if(errorIcon) errorIcon.classList.remove('invisible');
+            if(errorLabel) errorLabel.classList.remove('invisible');
+        }
 
     }
+
+    function removeErrorOnField(input){
+
+        input.classList.remove('error-field-input');
+
+        const container = input.parentNode;
+        const errorIcon = container.querySelector('span');
+        const errorLabel = container.querySelector('label');
+        
+        //avoids errors in case an element is undefined
+        if(errorIcon) errorIcon.classList.add('invisible');
+        if(errorLabel) errorLabel.classList.add('invisible');
+    }
+
+    function displayMessage(message, type){
+        Swal.fire({
+            toast: true,
+            text: message,
+            position: 'bottom-end',
+            icon: type ? type : 'info',
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+        })
+    }
+
     return {
         resetModal,
         appendComment,
@@ -77,7 +120,10 @@ function UI(){
         resetInput,
         modifyElementContent,
         handleCardIcon,
-        handleColumnCardsNumber
+        handleColumnCardsNumber,
+        setErrorOnField,
+        removeErrorOnField,
+        displayMessage,
     }
 
 }

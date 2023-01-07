@@ -29,11 +29,6 @@ class Task{
                     <div class="flex-center" style="gap: .8rem;">
                         <img card-data="type" src="./assets/card-icons/${props.type}.svg" alt="icon" width="18" height="18" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="${props.type}">
                         <img card-data="priority" src="./assets/card-icons/${props.priority}.svg" alt="icon" width="18" height="18" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="${props.priority}">
-                        <div class="complexity-indicator flex-center">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
                     </div>
                     <span card-data="assigned" card-title class="user-icon flex-center" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Assigned to: ${props.assigned}">${props.assigned[0]}${props.assigned[props.assigned.length - 1]}</span>
                 </div>`;

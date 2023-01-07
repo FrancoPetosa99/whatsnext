@@ -10,7 +10,9 @@
 }
 
 .right-panel{
-    width: 250px;
+    width: 100%;
+    min-width: 250px;
+    max-width: 300px;
     flex-direction: column;
     gap: 1.5rem;
 }
@@ -25,8 +27,36 @@
 .edit-task-input{
     padding: .2rem;
     width: 100%;
+    max-width: 300px;
     height: fit-content;
     border: solid 1px transparent;
+    cursor: pointer;
+}
+
+.select-input-container{
+    width: 100%;
+    height: auto;
+    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+}
+
+.title-input-container{
+    width: auto;
+    height: auto;
+    gap: 0.5rem;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+}
+
+.task-select{
+    padding: .5rem;
+    width: 100%;
+    max-width: 200px;
+    height: fit-content;
+    border: solid 1px #dadbdd;
     cursor: pointer;
 }
 
@@ -86,7 +116,28 @@
 .comment:disabled{
     color:  black;
     background-color: transparent;
- }
+}
+
+.error-field-icon{
+    height: 25px;
+    width: 25px;
+    color:  rgb(240, 68, 68);
+    border: solid 1px rgb(240, 68, 68);
+    font-weight: bold;
+    border-radius: 50%;
+    cursor: pointer;
+    align-self: center;
+    justify-self: flex-start;
+}
+
+.error-field-input{
+    border: solid 1px rgb(240, 68, 68);
+}
+
+.error-field-label{
+    color:rgb(240, 68, 68);
+    font-weight: bold;
+}
 
 /* ------------------------------ */
 

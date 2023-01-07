@@ -55,6 +55,15 @@ class ProjectMannager{
         const currentTask = this.getCurrentTask();
         currentTask.comments.push(comment);
     }
+
+    // handleValidationInput(input){
+
+    //     let fieldValueIsValid = true;
+        
+    //     if(input.required && !input.value) fieldValueIsValid = false;
+    
+    //     return invalidInputs;
+    // }
 }
 
 export default ProjectMannager;

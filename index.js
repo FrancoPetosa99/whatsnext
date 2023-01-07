@@ -80,25 +80,30 @@ function fetchAppData(){
     });
 }
 
-function handleValidation(){
-    return true
-}
-
 function createNewTask(){
 
-    try{
+    const noValidInputs = [];
+    let userMessage = '';
+    let typeMessage = '';
 
-        const modalInputs = [...document.querySelectorAll('[data-save-new]')];
-        const commentInputs = [...document.querySelectorAll('[name = comment]')];
+    const modalInputs = [...document.querySelectorAll('[data-save-new]')];
+    const commentInputs = [...document.querySelectorAll('[name = comment]')];
+
+    try{
 
         const newTaskObj = {};
         newTaskObj.comments = [];
         
-        modalInputs.forEach(input => newTaskObj[input.name] = input.value);
+        modalInputs.forEach(input => {
+            if(input.required && !input.value) noValidInputs.push(input);
+            else newTaskObj[input.name] = input.value;
+        });
+
+        //if any required field is missing stop process and throws an error to end user
+        if(noValidInputs.length > 0) throw new Error('Some fields are required');
+        
         commentInputs.forEach(input => newTaskObj.comments.push(input.value));
         
-        const isValid = handleValidation(newTaskObj);
-        if(!isValid) throw new Error('Fields are missing');
 
         newTaskObj.id = pm.getAvailableID();
 
@@ -110,15 +115,21 @@ function createNewTask(){
 
         storage.addTask(newTaskObj);
 
-        ui.resetModal();
-        ui.handleColumnCardsNumber();
         
         newTaskModal.hide();
+        ui.resetModal();
+        ui.handleColumnCardsNumber();
+
+        userMessage = 'Task successfully created';
+        typeMessage = 'success';
 
     }catch(error){
-        console.log(error);
+        userMessage = error.message;
+        typeMessage = 'error';
+        noValidInputs.forEach(input => ui.setErrorOnField(input));
     }
-
+    
+    ui.displayMessage(userMessage, typeMessage);
 }
 
 function addComment(){
@@ -169,6 +180,20 @@ function updateTaskByInput(input){
             ui.handleCardIcon(icon, input.value);
         }
     }
+}
+
+function handleBlurEventOnInput(input){
+
+    //if current task exist then has to be updated
+    if(pm.currentTask){ 
+        updateTaskByInput(input);
+    }
+
+    const inputHasValidValue = input.value != '';
+
+    //if field's value is valid just remove it for ui
+    if(inputHasValidValue) ui.removeErrorOnField(input);
+    else ui.setErrorOnField(input);
 }
 
 // MAIN CODE
@@ -229,7 +254,7 @@ columnList.forEach(column => {
 
 //add listener to update task data by blur event
 modalInputs.forEach(input => {
-    input.addEventListener('blur', (e)=> updateTaskByInput(e.target));
+    input.addEventListener('blur', (e)=> handleBlurEventOnInput(e.target));
 })
 
 btnNewTask.addEventListener('click', ()=> handleModal());
@@ -237,3 +262,5 @@ btnSaveTask.addEventListener('click', createNewTask);
 btnAddComment.addEventListener('click', addComment);
 btnDeleteTask.addEventListener('click', deleteTask);
 addCommentInput.addEventListener('focus', ()=> ui.handleElementView(comentsController, true));
+
+handleModal();

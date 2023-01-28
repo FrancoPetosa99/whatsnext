@@ -1,5 +1,5 @@
 // IMPORT SECTION
-import Dragdrop from './scripts/dragdrop.js';
+import Dragflik from './scripts/Dragflik.js';
 import ProjectMannager from './scripts/pm.js';
 import Storage from './scripts/storage.js';
 import Task from './scripts/task.js';
@@ -10,7 +10,7 @@ import UI from './scripts/ui.js';
     // MODULES & CLASS INSTANCE
     const ui = UI();
     const storage = Storage();
-    const dgdp = Dragdrop();
+    const dgdp = Dragflik();
     const pm = new ProjectMannager();
     const newTaskModal = new bootstrap.Modal('#new-task-modal');
     //const quillEditor = new Quill('#edit-description-task-input', {theme: 'snow'});
@@ -262,5 +262,6 @@ btnSaveTask.addEventListener('click', createNewTask);
 btnAddComment.addEventListener('click', addComment);
 btnDeleteTask.addEventListener('click', deleteTask);
 addCommentInput.addEventListener('focus', ()=> ui.handleElementView(comentsController, true));
-
-handleModal();
+dgdp.dgdpDropEvent(()=> {
+    console.log("funciona");
+})

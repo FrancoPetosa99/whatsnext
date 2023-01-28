@@ -1,9 +1,10 @@
-function Dragdrop(dropCallback){
+function Dragflik(){
 
     //global variables from module
     
     let draggedItem;
     let dragoverZone;
+    let dropCallback;
 
     const dropZones = [...document.querySelectorAll('[drop-zone = true]')];
 
@@ -66,9 +67,14 @@ function Dragdrop(dropCallback){
         newElement.addEventListener('dragend', dragEnd)
     }
 
+    function dgdpDropEvent(callback){
+        dropCallback = callback;
+    }
+
     return {
-        addDGDPListener
+        addDGDPListener,
+        dgdpDropEvent
     }
 }
 
-export default Dragdrop;
+export default Dragflik;

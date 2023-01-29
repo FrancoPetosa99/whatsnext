@@ -1,12 +1,13 @@
-function Dragflik(){
+function DragFlik(){
 
-    //global variables from module
+    //local variables from module
     
     let draggedItem;
     let dragoverZone;
     let dropCallback;
+    let dragCallback;
 
-    const dropZones = [...document.querySelectorAll('[drop-zone = true]')];
+    const dropZones = [];
 
     //aux functions
     function dragStart(){
@@ -31,7 +32,8 @@ function Dragflik(){
         }, 0);
     }
 
-    function drop(){
+    function drop(e){
+        e.preventDefault();
         this.classList.remove('drag-over');
         if(this != dragoverZone) this.parentNode.appendChild(draggedItem);
         if(dropCallback) dropCallback();
@@ -50,13 +52,6 @@ function Dragflik(){
         e.preventDefault();
     }
 
-    dropZones.forEach(zone => {
-        zone.addEventListener('dragover', dragOver);
-        zone.addEventListener('dragenter', dragEnter)
-        zone.addEventListener('dragleave', dragleave);
-        zone.addEventListener('drop', drop);
-    })
-
     //exported methods
     function addDGDPListener(newElement){
 
@@ -64,17 +59,46 @@ function Dragflik(){
         if(!newElement.draggable) throw new Error('The passed in node does not have attribute draggable set in true');
 
         newElement.addEventListener('dragstart', dragStart);
-        newElement.addEventListener('dragend', dragEnd)
+        newElement.addEventListener('dragend', dragEnd);
+    }
+
+    function addNewDZ(zone){
+
+        //create task-dropper for the new drop zone
+        const dropper = document.createElement('div');
+
+        //set some meta atributtes on dropper tag element
+        dropper.setAttribute('drop-zone', true);
+        dropper.setAttribute('aria-label', 'dgdp-drop-zone');
+        dropper.setAttribute('class', 'task-dropper');
+
+        zone.appendChild(dropper); //insert the task-dropper into the drop zone
+
+        //add event listeners to the task-dropper
+        dropper.addEventListener('dragover', dragOver);
+        dropper.addEventListener('dragenter', dragEnter)
+        dropper.addEventListener('dragleave', dragleave);
+        dropper.addEventListener('drop', drop);
+
+        //add drop zone to the array drop zones list
+        dropZones.push(dropper);
+
     }
 
     function dgdpDropEvent(callback){
         dropCallback = callback;
     }
 
+    function dgdpDragEvent(callback){
+        dragCallback = callback;
+    }
+
     return {
         addDGDPListener,
-        dgdpDropEvent
+        dgdpDropEvent,
+        dgdpDragEvent,
+        addNewDZ
     }
 }
 
-export default Dragflik;
+export default DragFlik;

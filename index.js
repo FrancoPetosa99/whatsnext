@@ -1,5 +1,5 @@
 // IMPORT SECTION
-import Dragflik from './scripts/Dragflik.js';
+import DragFlik from './scripts/DragFlik.js';
 import ProjectMannager from './scripts/pm.js';
 import Storage from './scripts/storage.js';
 import Task from './scripts/task.js';
@@ -10,7 +10,7 @@ import UI from './scripts/ui.js';
     // MODULES & CLASS INSTANCE
     const ui = UI();
     const storage = Storage();
-    const dgdp = Dragflik();
+    const dgdp = DragFlik();
     const pm = new ProjectMannager();
     const newTaskModal = new bootstrap.Modal('#new-task-modal');
     //const quillEditor = new Quill('#edit-description-task-input', {theme: 'snow'});
@@ -205,13 +205,18 @@ async function startApp(){
         const appData = await fetchAppData();
         
         const [taskList, userList] = appData;
+        
+        //set the state columsn as drop zones for DF library
+        const TaskContainerList = document.querySelectorAll('.card-tasks-container');
+        TaskContainerList.forEach(container => dgdp.addNewDZ(container));
 
         //create task-cards in the dom
         taskList.forEach(task => {
             const taskObj = new Task(task);
             dgdp.addDGDPListener(taskObj.card);
             pm.taskList.push(taskObj);
-        })
+        });
+
 
         //fill ddm with users
         if(userList) addOptionsToddm('[data-user-ddm]', userList);

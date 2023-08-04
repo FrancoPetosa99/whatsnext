@@ -10,7 +10,7 @@ import UI from './scripts/ui.js';
     // MODULES & CLASS INSTANCE
     const ui = UI();
     const storage = Storage();
-    const dgdp = DragFlik();
+    const df = new DragFlik();
     const pm = new ProjectMannager();
     const newTaskModal = new bootstrap.Modal('#new-task-modal');
     //const quillEditor = new Quill('#edit-description-task-input', {theme: 'snow'});
@@ -111,7 +111,7 @@ function createNewTask(){
 
         pm.taskList.push(newTask);
 
-        dgdp.addDGDPListener(newTask.card);
+        df.DFNewItem(newTask.card);
 
         storage.addTask(newTaskObj);
 
@@ -202,21 +202,36 @@ async function startApp(){
 
     try{
 
+        //fetch all the app data at once
         const appData = await fetchAppData();
         
         const [taskList, userList] = appData;
         
         //set the state columsn as drop zones for DF library
         const TaskContainerList = document.querySelectorAll('.card-tasks-container');
-        TaskContainerList.forEach(container => dgdp.addNewDZ(container));
+        TaskContainerList.forEach(container => {
+
+            const column = container.parentElement;
+            const columnName = column.id.slice('column-'.length, column.id.length);
+
+            const dropZoneObj = {
+                name: columnName,
+                zone: container
+            };
+
+            df.DFNewZone(dropZoneObj);
+        });
 
         //create task-cards in the dom
         taskList.forEach(task => {
             const taskObj = new Task(task);
-            dgdp.addDGDPListener(taskObj.card);
+            const taskElementObj = {
+                draggedElement: taskObj.card,
+                draggedElementId: task.id
+            }
+            df.DFNewItem(taskElementObj);
             pm.taskList.push(taskObj);
         });
-
 
         //fill ddm with users
         if(userList) addOptionsToddm('[data-user-ddm]', userList);
@@ -224,7 +239,6 @@ async function startApp(){
         ui.handleColumnCardsNumber();
 
         console.log(pm.taskList);
-        console.log(pm.getAvailableID());
 
     }catch(error){
         console.log(error);
@@ -267,6 +281,11 @@ btnSaveTask.addEventListener('click', createNewTask);
 btnAddComment.addEventListener('click', addComment);
 btnDeleteTask.addEventListener('click', deleteTask);
 addCommentInput.addEventListener('focus', ()=> ui.handleElementView(comentsController, true));
-dgdp.dgdpDropEvent(()=> {
-    console.log("funciona");
-})
+df.DFDropEvent((objData)=> {
+    const columnName = objData.dropName;
+    pm.currentTask = objData.draggedItemId;
+    ui.handleColumnCardsNumber();
+    pm.updateTaskByFieldName('state', columnName);
+    const taskListToUpdate = pm.taskList;
+    storage.updateTaskData(taskListToUpdate);
+});
